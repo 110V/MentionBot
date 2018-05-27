@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	config.OpenConfig()
 	//ServerSetting
 	discord, err := discordgo.New("Bot NDE2MjAzMTQyOTk3MjEzMTk0.Der7Cw.nRtFOT9Ti1yoKo4ncWESDv-zNiU")
 	if err != nil {
