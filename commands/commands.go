@@ -9,7 +9,7 @@ func CheckPerfix(command string) bool {
 }
 
 func GetCommandsAndArgs(commnad string) []string {
-	return strings.Fields(strings.TrimPrefix(commnad, setting.Prefix))
+	return strings.Fields(strings.TrimPrefix(commnad, setting.Prefixs))
 }
 
 func Run(CommandAndArgs []string) {
