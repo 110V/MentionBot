@@ -3,7 +3,7 @@ package commands
 import (
 	"strings"
 
-	setting "github.com/110V/MentionBot/setting"
+	setting "github.com/110V/MentionBot/config"
 )
 
 func CheckPerfix(command string) bool {
