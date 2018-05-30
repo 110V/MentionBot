@@ -7,16 +7,17 @@ import (
 	"os"
 )
 
-type configS struct {
+type Tconfig struct {
 	Prefix    string
 	NickLimit int
 	Token     string
+	AdminID   string
 }
 
-var GConfig configS
+var GConfig Tconfig
 
-func SaveConfig(con configS) {
-	bytes, err := json.Marshal(GConfig)
+func SaveConfig(con Tconfig) {
+	bytes, err := json.Marshal(con)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -26,16 +27,22 @@ func SaveConfig(con configS) {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println("콘피그를 새로 생성했습니다.")
 }
 
-func OpenConfig() {
+func OpenConfig() bool {
 	bytes, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		if os.IsNotExist(err) {
-			SaveConfig(configS{"%", 5, "'Write Token Here!'"})
+			SaveConfig(Tconfig{"%", 5, "'Write Token Here!'", "AdminID"})
 		}
 		fmt.Println(err)
-		return
+		return false
 	}
 	err = json.Unmarshal(bytes, &GConfig)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
 }

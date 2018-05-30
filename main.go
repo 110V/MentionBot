@@ -1,4 +1,4 @@
-package mentionbot
+package main
 
 import (
 	"fmt"
@@ -6,13 +6,22 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/110V/MentionBot/config"
+	"github.com/110V/MentionBot/nicks"
 	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
-	config.OpenConfig()
+	if !config.OpenConfig() {
+
+		return
+	}
+	if !nicks.OpenNickList() {
+
+		return
+	}
 	//ServerSetting
-	discord, err := discordgo.New("Bot NDE2MjAzMTQyOTk3MjEzMTk0.Der7Cw.nRtFOT9Ti1yoKo4ncWESDv-zNiU")
+	discord, err := discordgo.New("Bot " + config.GConfig.Token)
 	if err != nil {
 		fmt.Println(err.Error)
 		return
