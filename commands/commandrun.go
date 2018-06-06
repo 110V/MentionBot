@@ -1,7 +1,12 @@
 package commands
 
 import (
+	"errors"
 	"strings"
+
+	"github.com/110V/MentionBot/utils"
+
+	"github.com/110V/MentionBot/consts"
 
 	"github.com/110V/MentionBot/commandtype"
 
@@ -26,19 +31,36 @@ func FindCommand(cmdType commandtype.Command, commandList []commandtype.TSComman
 	return commandtype.TSCommand{Command: 0}
 }
 
-func Run(CommandAndArgs []string, s discordgo.Session, m discordgo.MessageCreate) bool {
-	tsc := FindCommand(commandtype.CommandMap[CommandAndArgs[0]], UserCommandList)
+func Run(commandAndArgs []string, s *discordgo.Session, m *discordgo.MessageCreate) (err error) {
+	tsc := FindCommand(commandtype.CommandMap[commandAndArgs[0]], UserCommandList)
+
 	if tsc.Command == 0 {
-		tsc = FindCommand(commandtype.CommandMap[CommandAndArgs[0]], AdminCommandList)
-		if tsc.Command == 0 {
-			return false
+		if commandtype.CommandMap[commandAndArgs[0]] == commandtype.ADMIN {
+			if len(commandAndArgs) < 2 {
+				err = errors.New(consts.ArgsError)
+				return
+			}
+			tsc = FindCommand(commandtype.CommandMap[commandAndArgs[1]], AdminCommandList)
+			if tsc.Command == 0 {
+				err = errors.New(consts.InvalidCommand)
+				return
+			}
+			if !utils.CheckAdmin(m.Author.ID) {
+				err = errors.New(consts.PermissionDenied)
+				return
+			}
+			commandAndArgs = commandAndArgs[1:]
+		} else {
+			err = errors.New(consts.InvalidCommand)
+			return
 		}
 	}
-	if len(CommandAndArgs) > 1 {
-		tsc.Run(s, m, CommandAndArgs[1:])
+
+	if len(commandAndArgs) > 1 {
+		tsc.Run(s, m, commandAndArgs[1:])
 	} else {
 		tsc.Run(s, m, nil)
 	}
 
-	return true
+	return
 }

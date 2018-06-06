@@ -8,10 +8,11 @@ import (
 )
 
 type Tconfig struct {
-	Prefix    string
-	NickLimit int
-	Token     string
-	AdminID   string
+	Prefix      string
+	NickLimit   int
+	Token       string
+	AdminID     string
+	ChannelList []string
 }
 
 var GConfig Tconfig
@@ -27,14 +28,14 @@ func SaveConfig(con Tconfig) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("콘피그를 새로 생성했습니다.")
+	fmt.Println("콘피그를 새로 저장했습니다.")
 }
 
 func OpenConfig() bool {
 	bytes, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		if os.IsNotExist(err) {
-			SaveConfig(Tconfig{"%", 5, "'Write Token Here!'", "AdminID"})
+			SaveConfig(Tconfig{"%", 5, "'Write Token Here!'", "AdminID", []string{}})
 		}
 		fmt.Println(err)
 		return false

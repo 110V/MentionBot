@@ -13,6 +13,11 @@ const (
 	REMOVE
 	RESET
 	HELP
+	HERE
+	LIST
+	ON
+	OFF
+	RELOAD
 )
 
 var CommandMap = map[string]Command{
@@ -22,12 +27,18 @@ var CommandMap = map[string]Command{
 	"remove":  REMOVE,
 	"reset":   RESET,
 	"nick":    NICK,
-	"help":    HELP}
+	"help":    HELP,
+	"here":    HERE,
+	"list":    LIST,
+	"on":      ON,
+	"off":     OFF,
+	"reload":  RELOAD}
 
 //command list
 
 type TSCommand struct {
 	Command Command
+	Use     string
 	Help    string
-	Run     func(s discordgo.Session, m discordgo.MessageCreate, args []string)
+	Run     func(s *discordgo.Session, m *discordgo.MessageCreate, args []string)
 }

@@ -6,8 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/110V/MentionBot/commands"
 	"github.com/110V/MentionBot/config"
-	"github.com/110V/MentionBot/nicks"
+	"github.com/110V/MentionBot/userconfig"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -16,10 +17,9 @@ func main() {
 
 		return
 	}
-	if !nicks.OpenNickList() {
+	userconfig.OpenConfig()
 
-		return
-	}
+	commands.RegistCommands()
 	//ServerSetting
 	discord, err := discordgo.New("Bot " + config.GConfig.Token)
 	if err != nil {
@@ -29,7 +29,7 @@ func main() {
 	fmt.Println("당신의 토큰은", discord.Token+"입니다")
 
 	//handles
-	discord.AddHandler(NewMessageCreate)
+	discord.AddHandler(newMessageCreate)
 
 	//Open
 	err = discord.Open()
