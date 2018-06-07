@@ -17,6 +17,7 @@ import (
 var mutex = &sync.Mutex{}
 
 func channelDelete(s *discordgo.Session, c *discordgo.ChannelDelete) {
+	mutex.Lock()
 	if utils.IndexOfString(config.GConfig.ChannelList, c.ID) != -1 {
 		tempArr := make([]string, 0)
 		for i := range config.GConfig.ChannelList {
@@ -26,8 +27,10 @@ func channelDelete(s *discordgo.Session, c *discordgo.ChannelDelete) {
 		}
 		config.GConfig.ChannelList = tempArr
 		config.SaveConfig(config.GConfig)
+		mutex.Unlock()
 		return
 	}
+	mutex.Unlock()
 }
 func newMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	//mention.Mention(s, m.Author.ID)

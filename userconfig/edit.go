@@ -72,8 +72,9 @@ func RemoveNick(ID string, Anicks []string) (err error) {
 }
 func ResetNick(ID string) {
 	user := FindUser(&GUserConfig, ID)
-	if len(user.Nicklist) != 0 {
-		user.Nicklist = nil
-		SaveConfig(GUserConfig)
+	if user == nil || len(user.Nicklist) == 0 {
+		return
 	}
+	user.Nicklist = nil
+	SaveConfig(GUserConfig)
 }
