@@ -50,6 +50,7 @@ func NickCommandHandler(s *discordgo.Session, m *discordgo.MessageCreate, args [
 	case commandtype.LIST:
 		{
 			s.ChannelMessageSend(m.ChannelID, nickMsg(m.Author.ID))
+			return
 		}
 	}
 	s.ChannelMessageSend(m.ChannelID, consts.ArgsError)
