@@ -11,7 +11,7 @@ import (
 
 func nickMsg(ID string) string {
 	u := userconfig.FindUser(&userconfig.GUserConfig, ID)
-	if u != nil || len(u.Nicklist) == 0 {
+	if u != nil || len(u.Nicklist) != 0 {
 		return ":x: `등록된 닉네임이 없습니다.`"
 	} else {
 		return ":paperclip:`현재 등록된 닉네임 목록 →`" + strings.Join(userconfig.FindUser(&userconfig.GUserConfig, ID).Nicklist, ",")
