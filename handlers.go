@@ -16,6 +16,19 @@ import (
 
 var mutex = &sync.Mutex{}
 
+func channelDelete(s *discordgo.Session, c *discordgo.ChannelDelete) {
+	if utils.IndexOfString(config.GConfig.ChannelList, c.ID) != -1 {
+		tempArr := make([]string, 0)
+		for i := range config.GConfig.ChannelList {
+			if c.ID != config.GConfig.ChannelList[i] {
+				tempArr = append(tempArr, config.GConfig.ChannelList[i])
+			}
+		}
+		config.GConfig.ChannelList = tempArr
+		config.SaveConfig(config.GConfig)
+		return
+	}
+}
 func newMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	//mention.Mention(s, m.Author.ID)
 	if m.Author.Bot {

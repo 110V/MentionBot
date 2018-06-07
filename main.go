@@ -30,7 +30,7 @@ func main() {
 
 	//handles
 	discord.AddHandler(newMessageCreate)
-
+	discord.AddHandler(channelDelete)
 	//Open
 	err = discord.Open()
 	if err != nil {
