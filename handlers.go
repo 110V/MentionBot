@@ -1,69 +1,62 @@
 package main
 
 import (
+	"log"
 	"strings"
-	"sync"
 
+	"github.com/110V/MentionBot/users"
 	"github.com/110V/MentionBot/utils"
 
 	"github.com/110V/MentionBot/mention"
-	"github.com/110V/MentionBot/userconfig"
 
 	"github.com/110V/MentionBot/commands"
 	"github.com/110V/MentionBot/config"
 	"github.com/bwmarrin/discordgo"
 )
 
-var mutex = &sync.Mutex{}
-
 func channelDelete(s *discordgo.Session, c *discordgo.ChannelDelete) {
-	mutex.Lock()
-	if utils.IndexOfString(config.GConfig.ChannelList, c.ID) != -1 {
-		tempArr := make([]string, 0)
-		for i := range config.GConfig.ChannelList {
-			if c.ID != config.GConfig.ChannelList[i] {
-				tempArr = append(tempArr, config.GConfig.ChannelList[i])
+	conf := config.Get()
+	if utils.IndexOfString(conf.ChannelList, c.ID) != -1 {
+		for i, ch := range conf.ChannelList {
+			if ch == c.ID {
+				conf.ChannelList = append(conf.ChannelList[:i], conf.ChannelList[i+1:]...)
+				i--
 			}
 		}
-		config.GConfig.ChannelList = tempArr
-		config.SaveConfig(config.GConfig)
-		mutex.Unlock()
+		err := config.Update(conf)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
-	mutex.Unlock()
 }
+
 func newMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	//mention.Mention(s, m.Author.ID)
 	if m.Author.Bot {
 		return
 	}
 	m.Content = strings.ToLower(m.Content)
-	//fmt.Println(m.Content)
-	if commands.CheckPerfix(m.Content) && !(m.Content == config.GConfig.Prefix) {
-		mutex.Lock()
+
+	if commands.CheckPerfix(m.Content) {
 		err := commands.Run(commands.GetCommandsAndArgs(m.Content), s, m)
-		mutex.Unlock()
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, err.Error())
 		}
-	} else {
-		mutex.Lock()
+		return
+	}
 
-		if utils.IndexOfString(config.GConfig.ChannelList, m.ChannelID) != -1 {
-			for _, user := range userconfig.GUserConfig.Users {
-				if !user.Running || user.Id == m.Author.ID {
-					continue
-				}
-				for _, nick := range user.Nicklist {
-					if strings.Contains(m.Content, nick) {
-						mention.Mention(s, m, user.Id, nick)
-						mutex.Unlock()
-						return
-					}
+	if utils.IndexOfString(config.Get().ChannelList, m.ChannelID) != -1 {
+		for _, user := range users.GetAll() {
+			if !user.Running || user.ID == m.Author.ID {
+				continue
+			}
+
+			for _, nick := range user.Nicklist {
+				if strings.Contains(m.Content, nick) {
+					mention.Mention(s, m, user.ID, nick)
+					break
 				}
 			}
 		}
-		mutex.Unlock()
-
 	}
 }

@@ -8,20 +8,24 @@ import (
 
 	"github.com/110V/MentionBot/commands"
 	"github.com/110V/MentionBot/config"
-	"github.com/110V/MentionBot/userconfig"
+	"github.com/110V/MentionBot/users"
 	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
-	if !config.OpenConfig() {
-
-		return
+	err := config.Open()
+	if err != nil {
+		panic(err)
 	}
-	userconfig.OpenConfig()
+
+	err = users.Open()
+	if err != nil {
+		panic(err)
+	}
 
 	commands.RegistCommands()
 	//ServerSetting
-	discord, err := discordgo.New("Bot " + config.GConfig.Token)
+	discord, err := discordgo.New("Bot " + config.Get().Token)
 	if err != nil {
 		fmt.Println(err.Error)
 		return
@@ -42,4 +46,5 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
+	discord.Close()
 }
