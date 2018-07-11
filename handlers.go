@@ -47,10 +47,9 @@ func newMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if utils.IndexOfString(config.Get().ChannelList, m.ChannelID) != -1 {
 		for _, user := range users.GetAll() {
-			if !user.Running || user.ID == m.Author.ID {
+			if !user.Running { //|| user.ID == m.Author.ID {
 				continue
 			}
-
 			for _, nick := range user.Nicklist {
 				if strings.Contains(m.Content, nick) {
 					mention.Mention(s, m, user.ID, nick)
