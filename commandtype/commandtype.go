@@ -1,6 +1,9 @@
 package commandtype
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/110V/MentionBot/users"
+	"github.com/bwmarrin/discordgo"
+)
 
 //command&Args type
 type Command int8
@@ -32,7 +35,8 @@ var CommandMap = map[string]Command{
 	"list":    LIST,
 	"on":      ON,
 	"off":     OFF,
-	"reload":  RELOAD}
+	"reload":  RELOAD,
+}
 
 //command list
 
@@ -40,5 +44,5 @@ type TSCommand struct {
 	Command Command
 	Use     string
 	Help    string
-	Run     func(s *discordgo.Session, m *discordgo.MessageCreate, args []string)
+	Run     func(s *discordgo.Session, m *discordgo.MessageCreate, user users.User, args []string)
 }
