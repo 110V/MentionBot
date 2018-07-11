@@ -34,7 +34,7 @@ func addChannel(channel string, s *discordgo.Session, chanID string) {
 	conf.ChannelList = append(conf.ChannelList, channel)
 	err := config.Update(conf)
 	if err != nil {
-		s.ChannelMessageSend(chanID, "뭐징??")
+		s.ChannelMessageSend(chanID, "뭐징~")
 		return
 	}
 
