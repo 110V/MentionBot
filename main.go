@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/110V/MentionBot/channels"
 	"github.com/110V/MentionBot/commands"
 	"github.com/110V/MentionBot/config"
 	"github.com/110V/MentionBot/users"
@@ -19,6 +20,11 @@ func main() {
 	}
 
 	err = users.Open()
+	if err != nil {
+		panic(err)
+	}
+
+	err = channels.Open()
 	if err != nil {
 		panic(err)
 	}

@@ -37,13 +37,14 @@ func (user *User) RemoveNick(nicks []string) error {
 		return errors.New(consts.ArgsError)
 	}
 
-	for i := range user.Nicklist {
-		for j := range nicks {
-			if nicks[i] == nicks[j] {
+	for i := 0; i < len(user.Nicklist); i++ {
+		for j := 0; j < len(nicks); j++ {
+			if user.Nicklist[i] == nicks[j] {
 				user.Nicklist = append(user.Nicklist[:i], user.Nicklist[i+1:]...)
 				i--
-				nicks = append(nicks[:i], nicks[i+1:]...)
+				nicks = append(nicks[:j], nicks[j+1:]...)
 				j--
+				break
 			}
 		}
 	}

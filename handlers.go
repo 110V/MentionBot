@@ -1,31 +1,29 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"strings"
+	"sync"
 
+	"github.com/110V/MentionBot/channels"
 	"github.com/110V/MentionBot/users"
 	"github.com/110V/MentionBot/utils"
 
 	"github.com/110V/MentionBot/mention"
 
 	"github.com/110V/MentionBot/commands"
-	"github.com/110V/MentionBot/config"
 	"github.com/bwmarrin/discordgo"
 )
 
+var mu sync.Mutex
+
 func channelDelete(s *discordgo.Session, c *discordgo.ChannelDelete) {
-	conf := config.Get()
-	if utils.IndexOfString(conf.ChannelList, c.ID) != -1 {
-		for i, ch := range conf.ChannelList {
-			if ch == c.ID {
-				conf.ChannelList = append(conf.ChannelList[:i], conf.ChannelList[i+1:]...)
-				i--
-			}
-		}
-		err := config.Update(conf)
+	mu.Lock()
+	defer mu.Unlock()
+	if utils.IndexOfString(channels.Get(), c.ID) != -1 {
+		err := channels.RemoveChannel(c.ID)
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
 		}
 		return
 	}
@@ -45,7 +43,7 @@ func newMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if utils.IndexOfString(config.Get().ChannelList, m.ChannelID) != -1 {
+	if utils.IndexOfString(channels.Get(), m.ChannelID) != -1 {
 		for _, user := range users.GetAll() {
 			if !user.Running || user.ID == m.Author.ID {
 				continue

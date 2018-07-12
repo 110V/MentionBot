@@ -14,7 +14,7 @@ func RegistCommands() {
 	UserCommandList = []commandtype.TSCommand{
 		commandtype.TSCommand{
 			Command: commandtype.NICK,
-			Use:     "nick add/remove/reset/list",
+			Use:     "nick/n add/remove/reset/list",
 			Help:    "감지될 별명을 추가/삭제/리셋 합니다. 등록된 닉네임을 보여줍니다.",
 			Run:     commandrun.NickCommandHandler,
 		},
@@ -31,6 +31,12 @@ func RegistCommands() {
 			Run:     commandrun.MentionOff,
 		},
 		commandtype.TSCommand{
+			Command: commandtype.STATUS,
+			Use:     "status, st",
+			Help:    "현재 상태를 보여줍니다. ",
+			Run:     commandrun.StatusView,
+		},
+		commandtype.TSCommand{
 			Command: commandtype.HELP,
 			Use:     "help (admin)",
 			Help:    "도움말을 불러옵니다. ",
@@ -40,13 +46,13 @@ func RegistCommands() {
 	AdminCommandList = []commandtype.TSCommand{
 		commandtype.TSCommand{
 			Command: commandtype.CHANNEL,
-			Use:     "admin channel add/remove/reset #ROOMNAME&here",
+			Use:     "admin/a channel/c add/remove/reset #ROOMNAME&here",
 			Help:    "감지가 될 채널을 주가/삭제/리셋 합니다. 등록된 채널을 보여줍니다.",
 			Run:     commandrun.ChannelCommandHandler,
 		},
 		commandtype.TSCommand{
 			Command: commandtype.RELOAD,
-			Use:     "admin reload",
+			Use:     "admin/a reload",
 			Help:    "콘피그를 리로드합니다",
 			Run:     commandrun.ReloadHandler,
 		},

@@ -21,21 +21,27 @@ const (
 	ON
 	OFF
 	RELOAD
+	STATUS
 )
 
 var CommandMap = map[string]Command{
 	"admin":   ADMIN,
+	"a":       ADMIN,
 	"channel": CHANNEL,
+	"c":       CHANNEL,
 	"add":     ADD,
 	"remove":  REMOVE,
 	"reset":   RESET,
 	"nick":    NICK,
+	"n":       NICK,
 	"help":    HELP,
 	"here":    HERE,
 	"list":    LIST,
 	"on":      ON,
 	"off":     OFF,
 	"reload":  RELOAD,
+	"status":  STATUS,
+	"st":      STATUS,
 }
 
 //command list

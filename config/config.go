@@ -13,11 +13,10 @@ var (
 )
 
 type Config struct {
-	Prefix      string
-	NickLimit   int
-	Token       string
-	AdminID     string
-	ChannelList []string
+	Prefix    string
+	NickLimit int
+	Token     string
+	AdminID   string
 }
 
 func Get() Config {
@@ -43,11 +42,10 @@ func Open() error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			conf = Config{
-				Prefix:      "%",
-				NickLimit:   5,
-				Token:       "'Write Token Here!'",
-				AdminID:     "AdminID",
-				ChannelList: []string{},
+				Prefix:    "%",
+				NickLimit: 5,
+				Token:     "'Write Token Here!'",
+				AdminID:   "AdminID",
 			}
 			err = save()
 		}
